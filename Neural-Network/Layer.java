@@ -23,7 +23,9 @@ abstract class Layer {
         for (int i = 0; i < this.neurons.length; i++) {
             this.weightedSums[i] = this.neurons[i].forward(inputs);
         }
-        return this.weightedSums;
+        // return this.weightedSums;
+        this.outputs = this.activation(this.weightedSums);
+        return this.outputs;
     }
 
     // Activation Function

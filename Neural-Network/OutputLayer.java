@@ -20,8 +20,8 @@ class OutputLayer extends Layer {
 
     private double sumOfExponents(double[] weightedSums) {
         double sum = 0;
-        for (double weightedSum : weightedSums) {
-            sum += Math.exp(weightedSum);
+        for (int i = 0; i < weightedSums.length; i++) {
+            sum += Math.exp(weightedSums[i]);
         }
         return sum;
     }

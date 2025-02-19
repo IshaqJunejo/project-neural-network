@@ -2,5 +2,5 @@
 hidden/
 
 # Ignoring Training and Testing Dataset (as it exceeds the allowed file size in GitHub)
-Data-Reader/mnist_test.csv
-Data-Reader/mnist_train.csv
+mnist_test.csv
+mnist_train.csv
