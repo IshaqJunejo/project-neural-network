@@ -21,7 +21,8 @@ abstract class Layer {
     public double[] forward (double[] inputs) {
         // Forward propagating each Neuron with the same inputs
         for (int i = 0; i < this.neurons.length; i++) {
-            this.weightedSums[i] = this.neurons[i].forward(inputs);
+            this.neurons[i].forward(inputs);
+            this.weightedSums[i] = this.neurons[i].getWeightedSum();
         }
         // return this.weightedSums;
         this.outputs = this.activation(this.weightedSums);
@@ -31,8 +32,20 @@ abstract class Layer {
     // Activation Function
     abstract public double[] activation (double[] weightedSums);
 
+    // Updating weights and biases
+    public void updateWeightsAndBiases (double[][] dWeights, double[] dBiases) {
+        for (int i = 0; i < this.neurons.length; i++) {
+            this.neurons[i].updateWeights(dWeights[i]);
+            this.neurons[i].updateBias(dBiases[i]);
+        }
+    }
+
     // Get Outputs
     public double[] getOutputs() {
         return this.outputs;
+    }
+
+    public double[] getWeightedSums() {
+        return this.weightedSums;
     }
 }

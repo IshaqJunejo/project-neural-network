@@ -19,7 +19,7 @@ class Neuron {
     }
 
     // Forward Propagation
-    public double forward (double[] inputs) {
+    public void forward (double[] inputs) {
         this.weightedSum = 0;
         // Calculating the dot product of inputs and weights
         for (int i = 0; i < inputs.length; i++) {
@@ -27,10 +27,6 @@ class Neuron {
         }
         // adding bias
         this.weightedSum += this.bias;
-        // activation function (TEMPORARY SOLUTION)
-        // this.output = this.activation(this.weightedSum);
-        // return output (return weightedSum)
-        return this.weightedSum;
     }
 
     // Getters
@@ -42,8 +38,23 @@ class Neuron {
         return this.bias;
     }
 
+    public double getWeightedSum() {
+        return this.weightedSum;
+    }
+
     public double getOutput() {
         return this.output;
+    }
+
+    // Methods to update weights and bias
+    public void updateWeights(double[] dWeights) {
+        for (int i = 0; i < this.weights.length; i++) {
+            this.weights[i] += dWeights[i];
+        }
+    }
+
+    public void updateBias(double dBias) {
+        this.bias += dBias;
     }
 
     // Set Output
