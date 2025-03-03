@@ -33,10 +33,10 @@ abstract class Layer {
     abstract public double[] activation (double[] weightedSums);
 
     // Updating weights and biases
-    public void updateWeightsAndBiases (double[][] dWeights, double[] dBiases) {
+    public void updateWeightsAndBiases (double[][] dWeights, double[] dBiases, double alpha) {
         for (int i = 0; i < this.neurons.length; i++) {
-            this.neurons[i].updateWeights(dWeights[i]);
-            this.neurons[i].updateBias(dBiases[i]);
+            this.neurons[i].updateWeights(dWeights[i], alpha);
+            this.neurons[i].updateBias(dBiases[i], alpha);
         }
     }
 
@@ -47,5 +47,21 @@ abstract class Layer {
 
     public double[] getWeightedSums() {
         return this.weightedSums;
+    }
+
+    public double[][] getWeights() {
+        double[][] weights = new double[this.neurons.length][this.neurons[0].getWeights().length];
+        for (int i = 0; i < this.neurons.length; i++) {
+            weights[i] = this.neurons[i].getWeights();
+        }
+        return weights;
+    }
+
+    public double[] getBiases() {
+        double[] bias = new double[this.neurons.length];
+        for (int i = 0; i < bias.length; i++) {
+            bias[i] = this.neurons[i].getBias();
+        }
+        return bias;
     }
 }
