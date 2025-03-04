@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 class Network {
     // One Hot Encoding
     static double[] oneHot(int label) {
@@ -162,7 +164,7 @@ class Network {
         System.out.println("Network Layers Assembled");
 
         // Training the Neural Network
-        int EPOCHS = 1000;
+        int EPOCHS = 100;
         for (int i = 0; i < EPOCHS; i++) {
             int correctPredictions = 0;
             int totalPredictions = 0;
@@ -183,6 +185,37 @@ class Network {
             System.out.println("Correctly Predicted: " + correctPredictions + " out of " + totalPredictions);
             System.out.println("Accuracy: " + ((double)correctPredictions / (double)totalPredictions * 100.0) + "%");
             System.out.println();
+        }
+
+        // Testing the Neural Network
+        int correctPredictions = 0;
+        int totalPredictions = 0;
+        for (int i = 0; i < testInput.length; i++) {
+            forwardPropagation(layer1, layer2, testInput[i]);
+
+            // Computing Accuracy
+            totalPredictions++;
+            double[] prediction = layer2.getOutputs();
+            if (indexOfMax(prediction) == testLabel[i]) {
+                correctPredictions++;
+            }
+        }
+
+        System.out.println("Correctly Prediction: " + correctPredictions + " out of " + totalPredictions);
+        System.out.println("Accuracy: " + ((double)correctPredictions / (double)totalPredictions * 100.0) + "%");
+        System.out.println();
+
+        // Saving the weights and biases
+        int asker = 0;
+        Scanner input = new Scanner(System.in);
+        System.out.println("Do you want to save the weights and biases? (1 for Yes, 0 for No)");
+        asker = input.nextInt();
+
+        if (asker == 1) {
+            CSVHandler.writeDataTo("weights1.csv", layer1.getWeights());
+            CSVHandler.writeDataTo("biases1.csv", layer1.getBiases());
+            CSVHandler.writeDataTo("weights2.csv", layer2.getWeights());
+            CSVHandler.writeDataTo("biases2.csv", layer2.getBiases());
         }
     }
 }
