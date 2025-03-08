@@ -27,6 +27,7 @@ class CSVHandler {
         return data;
     }
 
+    // Write a 2D array to a .csv file
     public static void writeDataTo(String fileName, double[][] data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < data.length; i++) {
@@ -40,6 +41,7 @@ class CSVHandler {
         }
     }
 
+    // Write a 1D array to a .csv file
     public static void writeDataTo(String fileName, double[] data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < data.length; i++) {

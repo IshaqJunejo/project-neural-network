@@ -46,13 +46,14 @@ class Neuron {
         return this.output;
     }
 
-    // Methods to update weights and bias
+    // Method to update weights
     public void updateWeights(double[] dWeights, double alpha) {
         for (int i = 0; i < this.weights.length; i++) {
             this.weights[i] -= dWeights[i] * alpha;
         }
     }
 
+    // Update Bias
     public void updateBias(double dBias, double alpha) {
         this.bias -= dBias * alpha;
     }

@@ -164,6 +164,8 @@ class Network {
         System.out.println("Network Layers Assembled");
 
         // Training the Neural Network
+        System.out.println("Training the Network");
+
         int EPOCHS = 100;
         for (int i = 0; i < EPOCHS; i++) {
             int correctPredictions = 0;
@@ -181,13 +183,16 @@ class Network {
             }
 
             // Displaying the Accuracy of the Network
-            System.out.println("Epoch number: " + i);
+            System.out.println("Epoch number: " + (i + 1));
+            System.out.println("Loss: " + crossEntropyLoss(layer2.getOutputs(), oneHot(trainLabel[trainLabel.length - 1])));
             System.out.println("Correctly Predicted: " + correctPredictions + " out of " + totalPredictions);
             System.out.println("Accuracy: " + ((double)correctPredictions / (double)totalPredictions * 100.0) + "%");
             System.out.println();
         }
 
         // Testing the Neural Network
+        System.out.println("Testing the Network");
+
         int correctPredictions = 0;
         int totalPredictions = 0;
         for (int i = 0; i < testInput.length; i++) {
