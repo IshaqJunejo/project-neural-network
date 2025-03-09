@@ -39,7 +39,19 @@ class Network {
         return difference;
     }
 
-    // Dot Product (bypassing the transpose)
+    // Transpose
+    static double[][] transpose (double[][] array) {
+        double[][] transposed = new double[array[0].length][array.length];
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                transposed[j][i] = array[i][j];
+            }
+        }
+
+        return transposed;
+    }
+
+    // Dot Product
     static double dotProduct (double[] array1, double[] array2) {
         if (array1.length != array2.length) {
             // return null;
@@ -103,9 +115,10 @@ class Network {
         double[] dBiases2 = dOutput2;
 
         // Gradient with respect to the output of hidden layer
+        double[][] transposeOfWeights2 = transpose(layer2.getWeights());
         double[] dHidden = new double[layer1.getWeights().length];
         for (int i = 0; i < dHidden.length; i++) {
-            dHidden[i] = dotProduct(dOutput2, layer2.getWeights()[i]);
+            dHidden[i] = dotProduct(dOutput2, transposeOfWeights2[i]);
         }
 
         // Gradient with respect to the hidden layer weights
@@ -158,13 +171,16 @@ class Network {
         System.out.println("Data Loaded");
 
         // Creating a Neural Network
-        HiddenLayer layer1 = new HiddenLayer(10, (28 * 28));
-        OutputLayer layer2 = new OutputLayer(10, 10);
+        HiddenLayer layer1 = new HiddenLayer((28 * 28), 16);
+        //HiddenLayer layer2 = new HiddenLayer(16, 16);
+        //OutputLayer layer3 = new OutputLayer(10, 16);
+        OutputLayer layer2 = new OutputLayer(16, 10);
 
         System.out.println("Network Layers Assembled");
 
         // Training the Neural Network
         System.out.println("Training the Network");
+        System.out.println();
 
         int EPOCHS = 100;
         for (int i = 0; i < EPOCHS; i++) {
