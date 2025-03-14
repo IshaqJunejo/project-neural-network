@@ -14,7 +14,7 @@ This is a basic implementation of a simple Artificial Neural Network that uses t
 
  - [x] Achieving 90+ percent accuracy.
  - [x] Write weights and biases to `.csv` files.
- - [ ] Expanding from `10 Neurons in 1 Hidden Layer` to `16 Neurons in 2 Hidden Layers each`.
+ - [x] Expanding from `10 Neurons in 1 Hidden Layer` to `16 Neurons in 2 Hidden Layers each`.
  - [ ] Having a GUI to hand-draw the digits for testing the Network.
  - [ ] Optimizing for Memory Consumption.
 
