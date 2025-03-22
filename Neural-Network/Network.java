@@ -158,7 +158,7 @@ class Network {
         }
 
         // Updating Weights and Biases
-        double learningRate = 0.001;
+        double learningRate = 0.0012;
         layer3.updateWeightsAndBiases(dWeights3, dBiases3, learningRate);
         layer2.updateWeightsAndBiases(dWeights2, dBiases2, learningRate);
         layer1.updateWeightsAndBiases(dWeights1, dBiases1, learningRate);
@@ -204,7 +204,7 @@ class Network {
         System.out.println("Training the Network");
         System.out.println();
 
-        int EPOCHS = 100;
+        int EPOCHS = 30;
         for (int i = 0; i < EPOCHS; i++) {
             int correctPredictions = 0;
             int totalPredictions = 0;
