@@ -1,7 +1,7 @@
 class OutputLayer extends Layer {
     // Constructor
-    public OutputLayer(int numOfNeurons, int numOfInputsPerNeuron) {
-        super(numOfNeurons, numOfInputsPerNeuron);
+    public OutputLayer(int numOfInputsPerNeuron, int numOfNeurons) {
+        super(numOfInputsPerNeuron, numOfNeurons);
     }
 
     // Activation Function

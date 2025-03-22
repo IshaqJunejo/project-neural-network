@@ -1,7 +1,7 @@
 class HiddenLayer extends Layer {
     // Constructor
-    public HiddenLayer(int numOfNeurons, int numOfInputsPerNeuron) {
-        super(numOfNeurons, numOfInputsPerNeuron);
+    public HiddenLayer(int numOfInputsPerNeuron, int numOfNeurons) {
+        super(numOfInputsPerNeuron, numOfNeurons);
     }
 
     // Activation Function

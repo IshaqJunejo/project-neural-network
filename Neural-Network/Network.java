@@ -39,7 +39,19 @@ class Network {
         return difference;
     }
 
-    // Dot Product (bypassing the transpose)
+    // Transpose
+    static double[][] transpose (double[][] array) {
+        double[][] transposed = new double[array[0].length][array.length];
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                transposed[j][i] = array[i][j];
+            }
+        }
+
+        return transposed;
+    }
+
+    // Dot Product
     static double dotProduct (double[] array1, double[] array2) {
         if (array1.length != array2.length) {
             // return null;
@@ -78,52 +90,76 @@ class Network {
     }
 
     // Forward Propagation
-    static void forwardPropagation (HiddenLayer layer1, OutputLayer layer2, double[] input) {
+    static void forwardPropagation (HiddenLayer layer1, HiddenLayer layer2, OutputLayer layer3, double[] input) {
         double[] outputs1 = layer1.forward(input);
         double[] outputs2 = layer2.forward(outputs1);
+        double[] outputs3 = layer3.forward(outputs2);
     }
 
     // Back Propagation
-    static void backPropagation (HiddenLayer layer1, OutputLayer layer2, double[] input, int label) {
+    static void backPropagation (HiddenLayer layer1, HiddenLayer layer2, OutputLayer layer3, double[] input, int label) {
         // One Hot Encoding
         double[] oneHotLabel = oneHot(label);
 
         // Gradient with respect to the output of the output layer
-        double[] dOutput2 = differenceOf(layer2.getOutputs(), oneHotLabel);
+        double[] dOutput3 = differenceOf(layer3.getOutputs(), oneHotLabel);
 
         // Gradient with respect to the output layer weights
-        double[][] dWeights2 = new double[layer2.getWeights().length][layer2.getWeights()[0].length];
-        for (int i = 0; i < dWeights2.length; i++) {
-            for (int j = 0; j < dWeights2[i].length; j++) {
-                dWeights2[i][j] = dOutput2[i] * layer1.getOutputs()[j];
+        double[][] dWeights3 = new double[layer3.getWeights().length][layer3.getWeights()[0].length];
+        for (int i = 0; i < dWeights3.length; i++) {
+            for (int j = 0; j < dWeights3[i].length; j++) {
+                dWeights3[i][j] = dOutput3[i] * layer2.getOutputs()[j];
             }
         }
 
         // Gradient with respect to the output layer biases
-        double[] dBiases2 = dOutput2;
+        double[] dBiases3 = dOutput3;
 
-        // Gradient with respect to the output of hidden layer
-        double[] dHidden = new double[layer1.getWeights().length];
-        for (int i = 0; i < dHidden.length; i++) {
-            dHidden[i] = dotProduct(dOutput2, layer2.getWeights()[i]);
+        // Gradient with respect to the output of 2nd hidden layer
+        double[][] transposeOfWeights3 = transpose(layer3.getWeights());
+        double[] dHidden2 = new double[layer2.getWeights().length];
+        for (int i = 0; i < dHidden2.length; i++) {
+            dHidden2[i] = dotProduct(dOutput3, transposeOfWeights3[i]);
         }
 
-        // Gradient with respect to the hidden layer weights
-        double[][] dWeights1 = new double[layer1.getWeights().length][layer1.getWeights()[0].length];
-        for (int i = 0; i < dWeights1.length; i++) {
-            for (int j = 0; j < dWeights1[i].length; j++) {
-                dWeights1[i][j] = dHidden[i] * ReLUDerivative(layer1.getOutputs()[i]) * input[j];
+        // Gradient with respect to the 2nd hidden layer weights
+        double[][] dWeights2 = new double[layer2.getWeights().length][layer2.getWeights()[0].length];
+        for (int i = 0; i < dWeights2.length; i++) {
+            for (int j = 0; j < dWeights2[i].length; j++) {
+                dWeights2[i][j] = dHidden2[i] * ReLUDerivative(layer2.getOutputs()[i]) * layer1.getOutputs()[j];
             }
         }
 
-        // Gradient with respect to the hidden layer biases
+        // Gradient with respect to the 2nd hidden layer biases
+        double[] dBiases2 = new double[layer2.getBiases().length];
+        for (int i = 0; i < dBiases2.length; i++) {
+            dBiases2[i] = dHidden2[i] * ReLUDerivative(layer2.getOutputs()[i]);
+        }
+
+        // Gradient with respect to the output of 1st hidden layer
+        double[][] transposeOfWeights2 = transpose(layer2.getWeights());
+        double[] dHidden1 = new double[layer1.getWeights().length];
+        for (int i = 0; i < dHidden1.length; i++) {
+            dHidden1[i] = dotProduct(dHidden2, transposeOfWeights2[i]);
+        }
+
+        // Gradient with respect to the 1st hidden layer weights
+        double[][] dWeights1 = new double[layer1.getWeights().length][layer1.getWeights()[0].length];
+        for (int i = 0; i < dWeights1.length; i++) {
+            for (int j = 0; j < dWeights1[i].length; j++) {
+                dWeights1[i][j] = dHidden1[i] * ReLUDerivative(layer1.getOutputs()[i]) * input[j];
+            }
+        }
+
+        // Gradient with respect to the 1st hidden layer biases
         double[] dBiases1 = new double[layer1.getBiases().length];
         for (int i = 0; i < dBiases1.length; i++) {
-            dBiases1[i] = dHidden[i] * ReLUDerivative(layer1.getOutputs()[i]);
+            dBiases1[i] = dHidden1[i] * ReLUDerivative(layer1.getOutputs()[i]);
         }
 
         // Updating Weights and Biases
         double learningRate = 0.001;
+        layer3.updateWeightsAndBiases(dWeights3, dBiases3, learningRate);
         layer2.updateWeightsAndBiases(dWeights2, dBiases2, learningRate);
         layer1.updateWeightsAndBiases(dWeights1, dBiases1, learningRate);
     }
@@ -158,25 +194,27 @@ class Network {
         System.out.println("Data Loaded");
 
         // Creating a Neural Network
-        HiddenLayer layer1 = new HiddenLayer(10, (28 * 28));
-        OutputLayer layer2 = new OutputLayer(10, 10);
+        HiddenLayer layer1 = new HiddenLayer((28 * 28), 16);
+        HiddenLayer layer2 = new HiddenLayer(16, 16);
+        OutputLayer layer3 = new OutputLayer(16, 10);
 
         System.out.println("Network Layers Assembled");
 
         // Training the Neural Network
         System.out.println("Training the Network");
+        System.out.println();
 
         int EPOCHS = 100;
         for (int i = 0; i < EPOCHS; i++) {
             int correctPredictions = 0;
             int totalPredictions = 0;
             for (int j = 0; j < trainInput.length; j++) {
-                forwardPropagation(layer1, layer2, trainInput[j]);
-                backPropagation(layer1, layer2, trainInput[j], trainLabel[j]);
+                forwardPropagation(layer1, layer2, layer3, trainInput[j]);
+                backPropagation(layer1, layer2, layer3, trainInput[j], trainLabel[j]);
 
                 // Computing Accuracy
                 totalPredictions++;
-                double[] prediction = layer2.getOutputs();
+                double[] prediction = layer3.getOutputs();
                 if (indexOfMax(prediction) == trainLabel[j]) {
                     correctPredictions++;
                 }
@@ -184,7 +222,7 @@ class Network {
 
             // Displaying the Accuracy of the Network
             System.out.println("Epoch number: " + (i + 1));
-            System.out.println("Loss: " + crossEntropyLoss(layer2.getOutputs(), oneHot(trainLabel[trainLabel.length - 1])));
+            System.out.println("Loss: " + crossEntropyLoss(layer3.getOutputs(), oneHot(trainLabel[trainLabel.length - 1])));
             System.out.println("Correctly Predicted: " + correctPredictions + " out of " + totalPredictions);
             System.out.println("Accuracy: " + ((double)correctPredictions / (double)totalPredictions * 100.0) + "%");
             System.out.println();
@@ -196,11 +234,11 @@ class Network {
         int correctPredictions = 0;
         int totalPredictions = 0;
         for (int i = 0; i < testInput.length; i++) {
-            forwardPropagation(layer1, layer2, testInput[i]);
+            forwardPropagation(layer1, layer2, layer3, testInput[i]);
 
             // Computing Accuracy
             totalPredictions++;
-            double[] prediction = layer2.getOutputs();
+            double[] prediction = layer3.getOutputs();
             if (indexOfMax(prediction) == testLabel[i]) {
                 correctPredictions++;
             }
@@ -221,6 +259,8 @@ class Network {
             CSVHandler.writeDataTo("biases1.csv", layer1.getBiases());
             CSVHandler.writeDataTo("weights2.csv", layer2.getWeights());
             CSVHandler.writeDataTo("biases2.csv", layer2.getBiases());
+            CSVHandler.writeDataTo("weights3.csv", layer3.getWeights());
+            CSVHandler.writeDataTo("biases3.csv", layer3.getBiases());
         }
     }
 }

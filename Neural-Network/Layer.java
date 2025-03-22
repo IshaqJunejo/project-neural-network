@@ -5,7 +5,7 @@ abstract class Layer {
     protected double[] outputs;
 
     // Contructor
-    public Layer (int numOfNeurons, int numOfInputsPerNeuron) {
+    public Layer (int numOfInputsPerNeuron, int numOfNeurons) {
         // Create a list of neurons
         this.neurons = new Neuron[numOfNeurons];
         // Initialize neurons
