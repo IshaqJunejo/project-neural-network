@@ -1,3 +1,5 @@
+package neuralnetwork;
+
 class Neuron {
     // Neuron Attributes
     private double[] weights;

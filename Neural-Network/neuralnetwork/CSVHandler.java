@@ -1,10 +1,12 @@
+package neuralnetwork;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-class CSVHandler {
+public class CSVHandler {
     // Read data from a .csv file
     public static int[][] readDataFrom (String fileName, int rows, int cols) {
         int data[][] = new int[rows][cols];

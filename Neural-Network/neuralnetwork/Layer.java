@@ -1,3 +1,5 @@
+package neuralnetwork;
+
 abstract class Layer {
     // Layer attributes
     protected Neuron[] neurons;
