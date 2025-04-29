@@ -42,7 +42,20 @@ abstract class Layer {
         }
     }
 
-    // Get Outputs
+    // Setter Functions
+    public void setWeights (double[][] w) {
+        for (int i = 0; i < this.neurons.length; i++) {
+            this.neurons[i].setWeights(w[i]);
+        }
+    }
+
+    public void setBiases (double[] b) {
+        for (int i =0; i < this.neurons.length; i++) {
+            this.neurons[i].setBias(b[i]);
+        }
+    }
+
+    // Getter Functions
     public double[] getOutputs() {
         return this.outputs;
     }

@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class CSVHandler {
-    // Read data from a .csv file
+    // Method to read dataset from a .csv file
     public static int[][] readDataFrom (String fileName, int rows, int cols) {
         int data[][] = new int[rows][cols];
 
@@ -19,6 +19,50 @@ public class CSVHandler {
                 String[] values = line.split(",");
                 for (int j = 0; j < values.length; j++) {
                     data[i][j] = Integer.parseInt(values[j].trim());
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        return data;
+    }
+
+    // Method to read weights from a .csv file
+    public static double[][] readWeights (String fileName, int rows, int cols) {
+        double data[][] = new double[rows][cols];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            int i = 0;
+
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                for (int j = 0; j < values.length; j++) {
+                    data[i][j] = Double.parseDouble(values[j].trim());
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        return data;
+    }
+
+    // Method to read biases from a .csv file
+    public static double[] readBiases (String fileName, int num) {
+        double data[] = new double[num];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            int i = 0;
+
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                for (int j = 0; j < values.length; j++) {
+                    data[j] = Double.parseDouble(values[j].trim());
                 }
                 i++;
             }

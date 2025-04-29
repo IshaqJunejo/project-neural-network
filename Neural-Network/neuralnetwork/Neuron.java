@@ -31,6 +31,15 @@ class Neuron {
         this.weightedSum += this.bias;
     }
 
+    // Setters
+    public void setWeights (double[] w) {
+        this.weights = w;
+    }
+
+    public void setBias (double b) {
+        this.bias = b;
+    }
+
     // Getters
     public double[] getWeights() {
         return this.weights;
