@@ -1,4 +1,6 @@
-class HiddenLayer extends Layer {
+package neuralnetwork;
+
+public class HiddenLayer extends Layer {
     // Constructor
     public HiddenLayer(int numOfInputsPerNeuron, int numOfNeurons) {
         super(numOfInputsPerNeuron, numOfNeurons);

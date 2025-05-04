@@ -1,4 +1,6 @@
-class OutputLayer extends Layer {
+package neuralnetwork;
+
+public class OutputLayer extends Layer {
     // Constructor
     public OutputLayer(int numOfInputsPerNeuron, int numOfNeurons) {
         super(numOfInputsPerNeuron, numOfNeurons);

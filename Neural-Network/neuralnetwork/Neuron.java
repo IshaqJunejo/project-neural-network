@@ -1,3 +1,5 @@
+package neuralnetwork;
+
 class Neuron {
     // Neuron Attributes
     private double[] weights;
@@ -27,6 +29,15 @@ class Neuron {
         }
         // adding bias
         this.weightedSum += this.bias;
+    }
+
+    // Setters
+    public void setWeights (double[] w) {
+        this.weights = w;
+    }
+
+    public void setBias (double b) {
+        this.bias = b;
     }
 
     // Getters
