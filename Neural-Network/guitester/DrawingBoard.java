@@ -5,10 +5,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class DrawingBoard extends JPanel implements MouseListener, MouseMotionListener {
-    private final int pixelSize = 20;
-    private final int gap = 3;
+    private final int pixelSize = 16;
+    private final int gap = 4;
     private final int rows = 28;
     private final int cols = 28;
+    private final int brushSize = 2;
+    private final double brushIntensity = 0.4;
     private double[][] intensity = new double[rows][cols];
 
     private Color currentColor = Color.BLACK;
@@ -20,10 +22,9 @@ public class DrawingBoard extends JPanel implements MouseListener, MouseMotionLi
         clearBoard();
     }
 
-    private void clearBoard() {
+    public void clearBoard() {
         for (int y = 0; y < rows; y++)
             for (int x = 0; x < cols; x++)
-                //pixels[y][x] = Color.WHITE;
                 intensity[y][x] = 0.0;
     }
 
@@ -36,7 +37,6 @@ public class DrawingBoard extends JPanel implements MouseListener, MouseMotionLi
             for (int x = 0; x < cols; x++) {
                 float value = (float) clamp(this.intensity[y][x], 0.0, 1.0);
                 g.setColor(new Color(value, value, value));
-                //g.setColor(pixels[y][x]);
                 g.fillRect(x * (pixelSize + gap), y * (pixelSize + gap), pixelSize, pixelSize);
             }
         }
@@ -50,23 +50,45 @@ public class DrawingBoard extends JPanel implements MouseListener, MouseMotionLi
         }
     }
 
-    private void drawPixel(int x, int y) {
-        int col = x / (pixelSize + gap);
-        int row = y / (pixelSize + gap);
-        if (row >= 0 && row < rows && col >= 0 && col < cols) {
-            //pixels[row][col] = currentColor;
-            intensity[row][col] = clamp(intensity[row][col] + 0.2, 0.0, 1.0);
+    private void drawBrush (int x, int y) {
+        int brushX = x / (pixelSize + gap);
+        int brushY = y / (pixelSize + gap);
+
+        for (int dx = -brushSize; dx <= brushSize; dx++) {
+            for (int dy = -brushSize; dy <= brushSize; dy++) {
+                int pixelX = brushX + dx;
+                int pixelY = brushY + dy;
+
+                if (pixelX >= 0 && pixelX < cols && pixelY >= 0 && pixelY < rows) {
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance <= brushSize) {
+                        intensity[pixelY][pixelX] = intensity[pixelY][pixelX] + (1.0 - distance / brushSize) * brushIntensity;
+                        intensity[pixelY][pixelX] = clamp(intensity[pixelY][pixelX], 0.0, 1.0);
+                    }
+                }
+            }
         }
         repaint();
     }
 
+    // Getter Function for intensity
+    public double[] getInput() {
+        double[] input = new double[rows * cols];
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                input[y * cols + x] = intensity[y][x];
+            }
+        }
+        return input;
+    }
+
     // Mouse events
     public void mousePressed(MouseEvent e) {
-        drawPixel(e.getX(), e.getY());
+        drawBrush(e.getX(), e.getY());
     }
 
     public void mouseDragged(MouseEvent e) {
-        drawPixel(e.getX(), e.getY());
+        drawBrush(e.getX(), e.getY());
     }
 
     // Clamp
